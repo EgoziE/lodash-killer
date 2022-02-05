@@ -7,7 +7,12 @@ const { exec } = require("child_process");
 const options = yargs
     .usage('Usage:')
     .usage('npx lodash-killer <path-to-file/folder>')
+    .option('e', { alias: 'exclude', describe: 'Functions you want to exclude from changing', type: 'array'})
+    .example('npx lodash-killer ./my-file.js --exclude isArray reverse')
     .argv;
+
+console.log(JSON.stringify(options));
+return;
 
 // Misuse
 if (options._.length === 0) {
