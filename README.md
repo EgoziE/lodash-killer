@@ -9,8 +9,6 @@ npx lodash-killer <path-to-file/folder>
 CLI options:
 ```shell
 npx lodash-killer --help
-
-
 ```
 
 Supported functions:
@@ -88,8 +86,8 @@ _.isArray(array);
 Array.isArray(array);
 
 // _.join
-var result = _.join(['one', 'two', 'three'], '--');
-var result = ['one', 'two', 'three'].join('--');
+_.join(['one', 'two', 'three'], '--');
+['one', 'two', 'three'].join('--');
 
 // _.last
 _.last([1, 2, 3, 4, 5]);
