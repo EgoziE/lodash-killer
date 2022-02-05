@@ -1,0 +1,22 @@
+{
+  "name": "lodash-killer",
+  "version": "1.0.0",
+  "description": "Reduce your bundle size by replacing lodash/underscore with native javascript!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EgoziE/lodash-killer.git"
+  },
+  "author": "Egozi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EgoziE/lodash-killer/issues"
+  },
+  "homepage": "https://github.com/EgoziE/lodash-killer#readme",
+  "dependencies": {
+    "jscodeshift": "^0.13.1"
+  }
+}
