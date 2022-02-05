@@ -1,6 +1,18 @@
 # lodash-killer
 Reduce your bundle size by replacing lodash/underscore with native javascript!
 
+How to use:
+```shell
+npx lodash-killer <path-to-file/folder>
+```
+
+CLI options:
+```shell
+npx lodash-killer --help
+
+
+```
+
 Supported functions:
 ```javascript
 // _.compact

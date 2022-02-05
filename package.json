@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/EgoziE/lodash-killer#readme",
   "dependencies": {
-    "jscodeshift": "^0.13.1"
+    "jscodeshift": "^0.13.1",
+    "yargs": "^17.3.1"
   }
 }
