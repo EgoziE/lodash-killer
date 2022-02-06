@@ -1,6 +1,6 @@
 {
   "name": "lodash-killer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Reduce your bundle size by replacing lodash/underscore with native javascript!",
   "main": "index.js",
   "bin": "index.js",
