@@ -7,12 +7,11 @@ const { exec } = require("child_process");
 const options = yargs
     .usage('Usage:')
     .usage('npx lodash-killer <path-to-file/folder>')
-    .option('e', { alias: 'exclude', describe: 'Functions you want to exclude from changing', type: 'array'})
-    .example('npx lodash-killer ./my-file.js --exclude isArray reverse')
+    .option('e', { alias: 'exclude', describe: 'List of functions to exclude from change', type: 'array'})
+    .option('o', { alias: 'only', describe: 'List of functions to change excluding all others', type: 'array'})
+    .example('npx lodash-killer ./my-folder --exclude isArray reverse')
+    .example('npx lodash-killer ./my-file.js --only find findIndex')
     .argv;
-
-console.log(JSON.stringify(options));
-return;
 
 // Misuse
 if (options._.length === 0) {
@@ -20,8 +19,16 @@ if (options._.length === 0) {
     return;
 }
 
+const command = ['jscodeshift', options._];
+if (options.exclude && options.exclude.length) {
+    command.push(`--exclude=${options.exclude.join(',')}`)
+}
+if (options.only && options.only.length) {
+    command.push(`--only=${options.only.join(',')}`)
+}
+
 // Execute jscodeshift
-exec(`jscodeshift ${options._.join(' ')}`, (error, stdout, stderr) => {
+exec(command.join(' '), (error, stdout, stderr) => {
     if (error) {
         console.log(`error: ${error.message}`);
         return;

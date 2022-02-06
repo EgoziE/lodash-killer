@@ -13,9 +13,14 @@ Usage:
 npx lodash-killer <path-to-file/folder>
 
 Options:
-  --help     Show help                                                 [boolean]
-  --version  Show version number                                       [boolean]
+      --help     Show help                                             [boolean]
+      --version  Show version number                                   [boolean]
+  -e, --exclude  List of functions to exclude from change                [array]
+  -o, --only     List of functions to change excluding all others        [array]
 
+Examples:
+  npx lodash-killer ./my-folder --exclude isArray reverse
+  npx lodash-killer ./my-file.js --only find findIndex
 ```
 
 Supported functions:

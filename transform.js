@@ -1,4 +1,4 @@
-const simpleFunct = [
+const lodashFuncs = [
     'concat',
     'compact',
     'drop',
@@ -39,18 +39,6 @@ Array.prototype.sortByDepth = function () {
     return this.map(p => ({ p, d: depth(p) }))
         .sort((p1, p2) => p1.d < p2.d ? 1 : -1)
         .map(({ p }) => p);
-};
-
-// eslint-disable-next-line no-extend-native
-Array.prototype.filterWithRest = function (rest) {
-    return this.filter(path => {
-        if (simpleFunct.includes(path.value.callee.property.name)) {
-            return true;
-        }
-
-        rest.push(path);
-        return false;
-    });
 };
 
 const rules = {};
@@ -137,9 +125,29 @@ rules.without = {
 };
 rules.initial = rules.dropRight;
 
-const transformSimpleFunctions = (j, lodashExpressions) => {
-    const rest = [];
-    const paths = lodashExpressions.filterWithRest(rest).sortByDepth();
+const transform = (file, api, options) => {
+    let funcs = lodashFuncs;
+    if (options.only) {
+        funcs = options.only.split(',').filter(f => funcs.includes(f));
+    }
+    let exclude = [];
+    if (options.exclude) {
+        exclude = options.exclude.split(',');
+    }
+
+    funcs = funcs.filter(f => !exclude.includes(f));
+
+    const j = api.jscodeshift;
+    const root = j(file.source);
+
+    let lodashExpressions = root
+        .find(j.CallExpression, { callee: { object: { name: '_' } } })
+        .paths();
+
+    // Simple binary functions which are implemented in native JS
+    const paths = lodashExpressions
+        .filter(path => funcs.includes(path.value.callee.property.name))
+        .sortByDepth();
 
     j(paths).replaceWith(path => {
         let func = path.value.callee.property;
@@ -163,22 +171,6 @@ const transformSimpleFunctions = (j, lodashExpressions) => {
 
         return j.callExpression(j.memberExpression(callee, func), args);
     });
-
-    return rest;
-};
-
-const transform = (file, api) => {
-    const j = api.jscodeshift;
-    const root = j(file.source);
-
-    let lodashExpressions = root
-        .find(j.CallExpression, { callee: { object: { name: '_' } } })
-        .paths();
-
-    // Simple binary functions which are implemented in native JS
-    lodashExpressions = transformSimpleFunctions(j, lodashExpressions);
-
-    // console.log(lodashExpressions);
 
     return root.toSource({
         quote: 'single',
