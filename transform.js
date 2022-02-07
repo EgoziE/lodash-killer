@@ -1,35 +1,33 @@
 const lodashFuncs = [
     'concat',
     'compact',
+    'difference',
     'drop',
     'dropRight',
     'fill',
     'find', // from index not supported
     'findIndex', // from index not supported
+    'findLastIndex',
     'first',
     'flatten',
     'flattenDeep',
     'flattenDepth',
     'fromPairs',
+    'head',
     'indexOf',
+    'initial',
     'intersection',
     'isArray',
     'join',
     'last',
     'lastIndexOf',
+    'map',
+    'nth',
     'reverse',
     'slice',
-    'without',
-    'initial',
-    'map',
     'some',
-];
-
-const notSupported = [
-    'takeRight',
-    'isArrayBuffer',
-    'pull',
-    'unionBy'
+    'tail',
+    'without',
 ];
 
 const depth = p => p ? 1 + depth(p.parentPath) : 0;
@@ -45,6 +43,10 @@ const rules = {};
 rules.compact = {
     func: 'Boolean',
     args: (j, func, args) => [j.identifier('true')],
+};
+rules.tail = {
+    func: 'slice',
+    args: (j, func, args) => [j.identifier('1')],
 };
 rules.drop = {
     func: 'slice',
@@ -65,7 +67,7 @@ rules.dropRight = {
         return ['0', ..._args].map(j.identifier);
     },
 };
-rules.first = {
+rules.first = rules.head = {
     func: 'shift',
     callee: (j, func, args) =>
         j.callExpression(j.memberExpression(j.identifier('[]'), j.identifier('concat')), [
@@ -74,6 +76,9 @@ rules.first = {
 };
 rules.flatten = {
     func: 'flat',
+};
+rules.nth = {
+    func: 'at',
 };
 rules.flattenDeep = {
     ...rules.flatten,
@@ -96,6 +101,11 @@ rules.intersection = {
     callee: (j, func, args) => j.arrayExpression(args),
     func: 'reduce',
     args: (j, func, args) => [j.identifier('(a, b) => a.filter(c => b.includes(c))')],
+};
+rules.difference = {
+    callee: (j, func, args) => j.arrayExpression(args),
+    func: 'reduce',
+    args: (j, func, args) => [j.identifier('(a, b) => a.filter(c => !b.includes(c))')],
 };
 rules.isArray = {
     custom: (j, func, args) =>
@@ -124,6 +134,9 @@ rules.without = {
     ],
 };
 rules.initial = rules.dropRight;
+rules.findLastIndex = {
+    func: 'lastIndexOf',
+};
 
 const transform = (file, api, options) => {
     let funcs = lodashFuncs;
