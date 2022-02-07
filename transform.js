@@ -27,6 +27,7 @@ const lodashFuncs = [
     'slice',
     'some',
     'tail',
+    'take',
     'without',
 ];
 
@@ -47,6 +48,15 @@ rules.compact = {
 rules.tail = {
     func: 'slice',
     args: (j, func, args) => [j.identifier('1')],
+};
+rules.take = {
+    func: 'slice',
+    args: (j, func, args) => {
+        if (args.length === 0) {
+            return [j.identifier('0'), j.identifier('1')];
+        }
+        return [j.identifier('0'), ...args];
+    },
 };
 rules.drop = {
     func: 'slice',

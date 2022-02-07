@@ -120,6 +120,12 @@ array.some(x => x + 1);
 _.tail(array);
 array.slice(1);
 
+// _.take
+_.take(array);
+array.slice(0, 1);
+_.take(array, 2);
+array.slice(0, 2);
+
 // _.without
 _.without(array, 1, 2);
 array.filter(v => ![1, 2].includes(v));
